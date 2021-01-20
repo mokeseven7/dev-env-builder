@@ -1,0 +1,40 @@
+#cloud-config
+# Add groups to the system
+# Adds the ubuntu group with members 'root' and 'sys'
+# and the empty group hashicorp.
+groups:
+  - ubuntu: [root,sys]
+  - hashicorp
+
+# Add users to the system. Users are added after groups are added.
+users:
+  - default
+  - name: terraform
+    gecos: terraform
+    shell: /bin/bash
+    primary_group: hashicorp
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin
+    ssh_import_id:
+    lock_passwd: false
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCvNxEnUwihvHiK4NjiTrYdWesPzV2ev+5Sw9w3+3JjwlwpdcGKeaeavASVgKKb0Lh2EO/+B2EdqyT7k1bYX5M7m2FckB0dafVzVPGCr3ubIdPgfN6NPCwztevp7pGLB1QeWq5hFe81HqAq1STiEbKNupmMocuzGz6618kNk5lkO/GNWqvK9TE8OBXP3EITqaq5mzuV+IMG6zXm0c/KkpnwEyxMJxm6DCvGThULCwzNjGeHIGqXQFs3joSgyHcsT3AvYfcAAieolWJifcEO6YIBWCfUuthKSF+R8AGuUye7UpW2vi8tWl9y+U0SlVer/lZktd/LbvYxwC/H9hCitHP2ODhH0Im0G49vZCIOFjvJ2/PKNHiBr18+xpLGlNX/luKA37KS/0vYKv+b36RsIbZzwaXw3/HiAOTe26ZFLt0cGAhec5Pt2zEEKaQfDwe7xC4Shc3c17IpbfmpEMqzaQbpx28q0vSCitXnuNorLiQntqnlNGIykuzkugGIadGtysk= your_email@example.com
+
+# Downloads the golang package
+packages:
+  - nginx-core
+
+package_update: true
+package_upgrade: true
+package_reboot_if_required: true
+
+apt_update: true
+apt_upgrade: true
+apt_reboot_if_required: true
+
+# Setsthe GOPATH & downloads the demo payload
+runcmd:
+  - sudo apt install nginx-core 
+  - sudo su terraform
+  - sudo systemctl restart nginx
+
