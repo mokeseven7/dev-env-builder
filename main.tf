@@ -4,11 +4,18 @@ terraform {
       source  = "hashicorp/aws"
       version = "3.24.1"
     }
+
+    tfe = {
+      source  = "hashicorp/tfe"
+      version = "0.23.0"
+    }
   }
 }
 
 provider "aws" {
-  region = var.region
+  region     = var.region
+  secret_key = "{{env `AWS_ACCESS_KEY`}}"
+  access_key = "{{env `AWS_ACCESS_SECRET`}}"
 }
 
 resource "aws_vpc" "vpc" {
